@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>寻找就近养老院 App 全面交互原型</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <section class="phone">
+    <header class="status">
+      <span>9:41</span>
+      <span>5G · 100%</span>
+    </header>
+
+    <main id="app">
+      <!-- 00 启动页 -->
+      <section class="page active center-page" id="splash">
+        <div class="brand-logo">养</div>
+        <h1>寻找就近养老院</h1>
+        <p>就近查询 · 资质透明 · 服务预约 · 适老化体验</p>
+        <button class="primary" onclick="goPage('role')">进入原型</button>
+        <button class="text-btn" onclick="goPage('prototypeGuide')">查看交互说明</button>
+      </section>
+
+      <!-- 01 角色选择 -->
+      <section class="page" id="role">
+        <div class="page-title">
+          <button class="back" onclick="goPage('splash')">←</button>
+          <h2>选择使用身份</h2>
+        </div>
+        <div class="role-card" onclick="selectRole('家属用户')">
+          <b>👨‍👩‍👧</b>
+          <div>
+            <h3>家属用户</h3>
+            <p>为家人查找附近养老院、对比服务、预约参观。</p>
+          </div>
+        </div>
+        <div class="role-card" onclick="selectRole('老年用户')">
+          <b>👵</b>
+          <div>
+            <h3>老年用户</h3>
+            <p>使用大字体、语音提示、一键求助、就近服务入口。</p>
+          </div>
+        </div>
+        <div class="role-card" onclick="selectRole('机构用户')">
+          <b>🏢</b>
+          <div>
+            <h3>机构用户</h3>
+            <p>展示机构信息、查看预约、管理床位与服务项目。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 引导页 -->
+      <section class="page" id="onboarding">
+        <div class="onboard">
+          <div class="big-icon">📍</div>
+          <h2>就近优先，快速匹配</h2>
+          <p>围绕“距离近、信息准、预约快”的核心需求，帮助用户减少线下反复考察成本。</p>
+        </div>
+        <div class="onboard">
+          <div class="big-icon">🧾</div>
+          <h2>信息透明，辅助决策</h2>
+          <p>展示资质、收费、床位、服务项目、评价和入住流程，形成完整选择链路。</p>
+        </div>
+        <div class="onboard">
+          <div class="big-icon">🧡</div>
+          <h2>适老化交互</h2>
+          <p>大字体、高对比、少层级、大按钮、强反馈，兼顾老年人与家属使用习惯。</p>
+        </div>
+        <button class="primary" onclick="goPage('login')">开始使用</button>
+        <button class="ghost" onclick="guestEnter()">游客体验</button>
+      </section>
+
+      <!-- 03 登录页 -->
+      <section class="page" id="login">
+        <div class="page-title">
+          <button class="back" onclick="goPage('role')">←</button>
+          <h2>快捷登录</h2>
+        </div>
+        <form class="card form" onsubmit="loginSubmit(event)">
+          <label>手机号
+            <input type="tel" placeholder="请输入手机号" maxlength="11">
+          </label>
+          <label>验证码
+            <div class="code-row">
+              <input type="text" placeholder="请输入验证码">
+              <button type="button" onclick="toast('验证码已发送')">获取验证码</button>
+            </div>
+          </label>
+          <button class="primary" type="submit">登录并进入首页</button>
+        </form>
+        <button class="ghost" onclick="goPage('orgConsole')">机构端演示入口</button>
+      </section>
+
+      <!-- 04 首页 -->
+      <section class="page" id="home">
+        <div class="home-top">
+          <div>
+            <p class="muted">您好，c · <span id="roleText">家属用户</span></p>
+            <h1>为家人寻找合适的养老服务</h1>
+          </div>
+          <button class="pill" onclick="toggleElder()">长辈模式</button>
+        </div>
+
+        <div class="location-card">
+          <span>当前定位</span>
+          <strong>北海市 · 海城区</strong>
+          <div class="row">
+            <button onclick="openModal('locationModal')">重新定位</button>
+            <button onclick="goPage('map')">地图找院</button>
+          </div>
+        </div>
+
+        <div class="search-area">
+          <input id="homeSearch" type="search" placeholder="搜索养老院、医疗护理、康复、助餐" oninput="homeSearchJump()">
+          <button onclick="goPage('search')">高级搜索</button>
+        </div>
+
+        <div class="notice" onclick="goPage('policy')">
+          <b>政策提示</b>
+          <span>查看养老服务补贴、入住流程与家属注意事项 ›</span>
+        </div>
+
+        <div class="grid-4">
+          <button onclick="goNearby('全部')"><b>🏡</b><span>附近养老院</span></button>
+          <button onclick="goNearby('医疗护理')"><b>➕</b><span>医疗护理</span></button>
+          <button onclick="goNearby('康复照护')"><b>🧘</b><span>康复照护</span></button>
+          <button onclick="goPage('emergency')"><b>☎️</b><span>一键求助</span></button>
+          <button onclick="goPage('services')"><b>🧺</b><span>居家服务</span></button>
+          <button onclick="goPage('compare')"><b>⚖️</b><span>机构对比</span></button>
+          <button onclick="goPage('messages')"><b>💬</b><span>消息咨询</span></button>
+          <button onclick="goPage('prototypeGuide')"><b>📘</b><span>原型说明</span></button>
+        </div>
+
+        <div class="section-head">
+          <h2>智能推荐</h2>
+          <button onclick="goNearby('全部')">查看更多</button>
+        </div>
+        <div id="recommend"></div>
+
+        <div class="section-head">
+          <h2>健康与养老资讯</h2>
+          <button onclick="goPage('news')">全部</button>
+        </div>
+        <article class="article" onclick="openArticle('选择养老院前需要重点查看什么')">
+          <h3>选择养老院前需要重点查看什么？</h3>
+          <p>建议查看机构资质、护理人员、收费标准、医疗协作、消防安全与探视规则。</p>
+        </article>
+      </section>
+
+      <!-- 05 高级搜索 -->
+      <section class="page" id="search">
+        <div class="page-title">
+          <button class="back" onclick="goPage('home')">←</button>
+          <h2>高级搜索</h2>
+        </div>
+        <div class="card form">
+          <label>关键词
+            <input id="advKeyword" type="text" placeholder="例如：医养结合、康复、助餐">
+          </label>
+          <label>距离范围
+            <select id="advDistance">
+              <option value="全部">不限</option>
+              <option value="3公里内">3公里内</option>
+              <option value="5公里内">5公里内</option>
+            </select>
+          </label>
+          <label>服务类型
+            <select id="advType">
+              <option value="全部">不限</option>
+              <option value="医疗护理">医疗护理</option>
+              <option value="康复照护">康复照护</option>
+              <option value="价格适中">价格适中</option>
+              <option value="社区养老">社区养老</option>
+            </select>
+          </label>
+          <label>预算范围
+            <select id="advBudget">
+              <option value="全部">不限</option>
+              <option value="3000以下">3000元以下</option>
+              <option value="3000-4000">3000-4000元</option>
+              <option value="4000以上">4000元以上</option>
+            </select>
+          </label>
+          <button class="primary" onclick="applyAdvancedSearch()">查看匹配结果</button>
+        </div>
+      </section>
+
+      <!-- 06 附近列表 -->
+      <section class="page" id="nearby">
+        <div class="page-title sticky">
+          <button class="back" onclick="goPage('home')">←</button>
+          <h2>附近养老院</h2>
+          <button class="small" onclick="openModal('filterModal')">筛选</button>
+        </div>
+
+        <div class="search-area compact">
+          <input id="listSearch" type="search" placeholder="搜索机构或服务" oninput="renderList()">
+          <button onclick="goPage('map')">地图</button>
+        </div>
+
+        <div class="chips">
+          <button class="chip active" data-filter="全部" onclick="setFilter('全部', this)">全部</button>
+          <button class="chip" data-filter="3公里内" onclick="setFilter('3公里内', this)">3公里内</button>
+          <button class="chip" data-filter="5公里内" onclick="setFilter('5公里内', this)">5公里内</button>
+          <button class="chip" data-filter="医疗护理" onclick="setFilter('医疗护理', this)">医疗护理</button>
+          <button class="chip" data-filter="康复照护" onclick="setFilter('康复照护', this)">康复照护</button>
+          <button class="chip" data-filter="价格适中" onclick="setFilter('价格适中', this)">价格适中</button>
+        </div>
+
+        <div class="sortbar">
+          <button onclick="sortBy('distance')">距离优先</button>
+          <button onclick="sortBy('score')">评分优先</button>
+          <button onclick="sortBy('price')">价格优先</button>
+        </div>
+        <div id="institutionList"></div>
+      </section>
+
+      <!-- 07 地图找院 -->
+      <section class="page" id="map">
+        <div class="page-title">
+          <button class="back" onclick="goPage('nearby')">←</button>
+          <h2>地图找院</h2>
+        </div>
+        <div class="map-full">
+          <span class="me">当前位置</span>
+          <button class="pin p1" onclick="openDetail(1)">安心养老</button>
+          <button class="pin p2" onclick="openDetail(2)">银湾照护</button>
+          <button class="pin p3" onclick="openDetail(3)">社区驿站</button>
+          <button class="pin p4" onclick="openDetail(4)">康乐颐养</button>
+        </div>
+        <p class="muted">地图为演示示意，用于表现“定位—周边机构—点击查看详情”的交互逻辑。</p>
+      </section>
+
+      <!-- 08 详情页 -->
+      <section class="page" id="detail">
+        <div class="page-title sticky">
+          <button class="back" onclick="goPage('nearby')">←</button>
+          <h2>机构详情</h2>
+          <button class="small" id="favBtn" onclick="toggleFavorite()">收藏</button>
+        </div>
+        <div id="detailBox"></div>
+      </section>
+
+      <!-- 09 图片预览 -->
+      <section class="page center-page" id="gallery">
+        <button class="back top-left" onclick="goPage('detail')">←</button>
+        <div class="gallery-icon">🏡</div>
+        <h2>机构环境图片预览</h2>
+        <p>这里用于模拟养老院环境图、房间图、活动室图、餐厅图等图片浏览交互。</p>
+      </section>
+
+      <!-- 10 对比页 -->
+      <section class="page" id="compare">
+        <div class="page-title">
+          <button class="back" onclick="goPage('home')">←</button>
+          <h2>机构对比</h2>
+        </div>
+        <div id="compareBox"></div>
+      </section>
+
+      <!-- 11 服务分类 -->
+      <section class="page" id="services">
+        <div class="page-title">
+          <button class="back" onclick="goPage('home')">←</button>
+          <h2>服务分类</h2>
+        </div>
+        <div class="service-list" id="serviceList"></div>
+      </section>
+
+      <!-- 12 服务申请 -->
+      <section class="page" id="serviceApply">
+        <div class="page-title">
+          <button class="back" onclick="goPage('services')">←</button>
+          <h2>服务申请</h2>
+        </div>
+        <form class="card form" onsubmit="submitService(event)">
+          <label>申请服务
+            <input id="serviceName" readonly>
+          </label>
+          <label>联系人
+            <input required placeholder="请输入联系人姓名">
+          </label>
+          <label>联系电话
+            <input required placeholder="请输入手机号">
+          </label>
+          <label>服务地址
+            <input placeholder="请输入大致地址">
+          </label>
+          <button class="primary" type="submit">提交服务申请</button>
+        </form>
+      </section>
+
+      <!-- 13 预约参观 -->
+      <section class="page" id="appointment">
+        <div class="page-title sticky">
+          <button class="back" onclick="goPage('detail')">←</button>
+          <h2>预约参观</h2>
+        </div>
+        <form class="card form" onsubmit="submitAppointment(event)">
+          <label>预约机构
+            <input id="appointOrg" readonly>
+          </label>
+          <label>联系人
+            <input required placeholder="请输入姓名">
+          </label>
+          <label>联系电话
+            <input required placeholder="请输入手机号">
+          </label>
+          <label>预约时间
+            <select>
+              <option>明天 09:00-10:00</option>
+              <option>明天 14:00-15:00</option>
+              <option>后天 10:00-11:00</option>
+              <option>后天 15:00-16:00</option>
+            </select>
+          </label>
+          <label>重点了解内容</label>
+          <div class="check-grid">
+            <span><input type="checkbox"> 收费标准</span>
+            <span><input type="checkbox"> 床位情况</span>
+            <span><input type="checkbox"> 医疗护理</span>
+            <span><input type="checkbox"> 探视规则</span>
+          </div>
+          <label>备注
+            <textarea placeholder="例如：希望重点了解护理等级、是否可短期试住"></textarea>
+          </label>
+          <button class="primary" type="submit">提交预约</button>
+        </form>
+      </section>
+
+      <!-- 14 成功页 -->
+      <section class="page center-page" id="success">
+        <div class="success-icon">✓</div>
+        <h2 id="successTitle">提交成功</h2>
+        <p id="successText">工作人员会尽快与您联系。</p>
+        <button class="primary" onclick="goPage('orders')">查看记录</button>
+        <button class="ghost" onclick="goPage('home')">返回首页</button>
+      </section>
+
+      <!-- 15 评价页 -->
+      <section class="page" id="review">
+        <div class="page-title">
+          <button class="back" onclick="goPage('orders')">←</button>
+          <h2>服务评价</h2>
+        </div>
+        <form class="card form" onsubmit="submitReview(event)">
+          <label>评分
+            <select>
+              <option>5星 非常满意</option>
+              <option>4星 比较满意</option>
+              <option>3星 一般</option>
+            </select>
+          </label>
+          <label>评价内容
+            <textarea placeholder="请简单描述服务体验"></textarea>
+          </label>
+          <button class="primary" type="submit">提交评价</button>
+        </form>
+      </section>
+
+      <!-- 16 消息 -->
+      <section class="page" id="messages">
+        <div class="page-title">
+          <h2>消息咨询</h2>
+        </div>
+        <div class="chat-list" id="chatList"></div>
+      </section>
+
+      <!-- 17 聊天详情 -->
+      <section class="page" id="chat">
+        <div class="page-title sticky">
+          <button class="back" onclick="goPage('messages')">←</button>
+          <h2 id="chatTitle">在线咨询</h2>
+        </div>
+        <div class="chat-box" id="chatBox"></div>
+        <div class="chat-input">
+          <input id="chatInput" placeholder="请输入咨询内容">
+          <button onclick="sendChat()">发送</button>
+        </div>
+      </section>
+
+      <!-- 18 资讯 -->
+      <section class="page" id="news">
+        <div class="page-title">
+          <h2>资讯科普</h2>
+        </div>
+        <div id="newsList"></div>
+      </section>
+
+      <!-- 19 政策说明 -->
+      <section class="page" id="policy">
+        <div class="page-title">
+          <button class="back" onclick="goPage('home')">←</button>
+          <h2>政策与入住说明</h2>
+        </div>
+        <article class="card">
+          <h3>入住前准备</h3>
+          <p>家属可提前准备老人身份证明、健康情况说明、既往病史、用药信息以及紧急联系人信息。</p>
+        </article>
+        <article class="card">
+          <h3>平台信息公示</h3>
+          <p>原型中重点展示机构资质、收费、床位、服务内容、联系方式和用户评价，体现信息透明化设计。</p>
+        </article>
+        <article class="card">
+          <h3>服务闭环</h3>
+          <p>用户可完成“查询—筛选—对比—咨询—预约—评价”的完整交互链路。</p>
+        </article>
+      </section>
+
+      <!-- 20 一键求助 -->
+      <section class="page" id="emergency">
+        <div class="page-title">
+          <button class="back" onclick="goPage('home')">←</button>
+          <h2>一键求助</h2>
+        </div>
+        <div class="card sos-card">
+          <button class="sos" onclick="openModal('sosModal')">SOS</button>
+          <h3>紧急联系</h3>
+          <p>适合长辈模式中的快速求助入口，可模拟联系家属、社区服务点或附近养老机构。</p>
+        </div>
+        <button class="primary" onclick="toast('已联系紧急联系人')">联系家属</button>
+        <button class="ghost" onclick="toast('已联系社区服务点')">联系社区服务点</button>
+      </section>
+
+      <!-- 21 我的 -->
+      <section class="page" id="mine">
+        <div class="profile">
+          <div class="avatar">c</div>
+          <div>
+            <h2>个人中心</h2>
+            <p>管理预约、收藏、浏览记录和适老化设置</p>
+          </div>
+        </div>
+        <div class="stats">
+          <button onclick="goPage('orders')"><b id="orderCount">0</b><span>预约</span></button>
+          <button onclick="showFavorites()"><b id="favCount">0</b><span>收藏</span></button>
+          <button onclick="openModal('historyModal')"><b>6</b><span>浏览</span></button>
+        </div>
+        <div class="menu">
+          <button onclick="goPage('orders')">我的预约 <span>›</span></button>
+          <button onclick="showFavorites()">我的收藏 <span>›</span></button>
+          <button onclick="goPage('settings')">适老化设置 <span>›</span></button>
+          <button onclick="goPage('orgApply')">机构入驻申请 <span>›</span></button>
+          <button onclick="goPage('prototypeGuide')">原型说明 <span>›</span></button>
+        </div>
+      </section>
+
+      <!-- 22 预约记录 -->
+      <section class="page" id="orders">
+        <div class="page-title">
+          <button class="back" onclick="goPage('mine')">←</button>
+          <h2>我的预约</h2>
+        </div>
+        <div id="orderList"></div>
+      </section>
+
+      <!-- 23 设置 -->
+      <section class="page" id="settings">
+        <div class="page-title">
+          <button class="back" onclick="goPage('mine')">←</button>
+          <h2>适老化设置</h2>
+        </div>
+        <div class="card setting">
+          <div>
+            <h3>长辈模式</h3>
+            <p>开启后字体更大，按钮更明显，减少复杂层级。</p>
+          </div>
+          <label class="switch"><input type="checkbox" id="elderSwitch" onchange="toggleElderBySwitch()"><span></span></label>
+        </div>
+        <div class="card setting">
+          <div>
+            <h3>语音播报</h3>
+            <p>模拟按钮点击后的语音反馈提示。</p>
+          </div>
+          <label class="switch"><input type="checkbox" id="voiceSwitch"><span></span></label>
+        </div>
+        <div class="card setting">
+          <div>
+            <h3>高对比显示</h3>
+            <p>增强重要按钮和提示信息识别度。</p>
+          </div>
+          <label class="switch"><input type="checkbox" id="contrastSwitch" onchange="toggleContrast()"><span></span></label>
+        </div>
+      </section>
+
+      <!-- 24 机构入驻 -->
+      <section class="page" id="orgApply">
+        <div class="page-title">
+          <button class="back" onclick="goPage('mine')">←</button>
+          <h2>机构入驻申请</h2>
+        </div>
+        <form class="card form" onsubmit="submitOrgApply(event)">
+          <label>机构名称
+            <input required placeholder="请输入机构名称">
+          </label>
+          <label>机构类型
+            <select>
+              <option>养老院</option>
+              <option>社区养老服务点</option>
+              <option>居家养老服务商</option>
+            </select>
+          </label>
+          <label>联系电话
+            <input required placeholder="请输入联系电话">
+          </label>
+          <label>资质说明
+            <textarea placeholder="请填写备案、护理资质、服务范围等"></textarea>
+          </label>
+          <button class="primary" type="submit">提交入驻申请</button>
+        </form>
+      </section>
+
+      <!-- 25 机构端控制台 -->
+      <section class="page" id="orgConsole">
+        <div class="page-title">
+          <button class="back" onclick="goPage('login')">←</button>
+          <h2>机构端管理</h2>
+        </div>
+        <div class="dashboard">
+          <div><b>12</b><span>剩余床位</span></div>
+          <div><b>8</b><span>今日咨询</span></div>
+          <div><b>3</b><span>待确认预约</span></div>
+        </div>
+        <div class="menu">
+          <button onclick="goPage('orgInfo')">机构信息管理 <span>›</span></button>
+          <button onclick="goPage('orgOrders')">预约订单管理 <span>›</span></button>
+          <button onclick="toast('床位数据已更新')">更新床位状态 <span>›</span></button>
+          <button onclick="toast('服务套餐已发布')">发布服务套餐 <span>›</span></button>
+        </div>
+      </section>
+
+      <!-- 26 机构信息管理 -->
+      <section class="page" id="orgInfo">
+        <div class="page-title">
+          <button class="back" onclick="goPage('orgConsole')">←</button>
+          <h2>机构信息管理</h2>
+        </div>
+        <form class="card form" onsubmit="saveOrgInfo(event)">
+          <label>机构名称
+            <input value="海城区安心养老中心">
+          </label>
+          <label>收费标准
+            <input value="3200元/月起">
+          </label>
+          <label>剩余床位
+            <input value="12">
+          </label>
+          <label>服务内容
+            <textarea>生活照料、医疗护理、康复训练、营养餐食</textarea>
+          </label>
+          <button class="primary" type="submit">保存修改</button>
+        </form>
+      </section>
+
+      <!-- 27 机构订单管理 -->
+      <section class="page" id="orgOrders">
+        <div class="page-title">
+          <button class="back" onclick="goPage('orgConsole')">←</button>
+          <h2>预约订单管理</h2>
+        </div>
+        <article class="card">
+          <h3>迟先生 · 预约参观</h3>
+          <p>预约时间：明天 09:00-10:00</p>
+          <p>重点了解：床位、护理、收费</p>
+          <button class="primary" onclick="toast('已确认预约并通知用户')">确认预约</button>
+          <button class="ghost" onclick="toast('已发送改期建议')">建议改期</button>
+        </article>
+      </section>
+
+      <!-- 28 原型说明 -->
+      <section class="page" id="prototypeGuide">
+        <div class="page-title">
+          <button class="back" onclick="goPage('splash')">←</button>
+          <h2>交互设计说明</h2>
+        </div>
+        <article class="card">
+          <h3>一、用户端主流程</h3>
+          <p>启动页 → 角色选择 → 登录 → 首页 → 附近养老院 → 详情 → 收藏/对比/咨询 → 预约参观 → 我的预约 → 评价。</p>
+        </article>
+        <article class="card">
+          <h3>二、适老化设计</h3>
+          <p>采用大按钮、大字号、高对比、短路径、强反馈，并加入一键求助和语音播报开关。</p>
+        </article>
+        <article class="card">
+          <h3>三、服务闭环</h3>
+          <p>从信息查询到服务申请，再到订单记录和评价反馈，形成完整线上服务闭环。</p>
+        </article>
+        <article class="card">
+          <h3>四、机构端补充</h3>
+          <p>加入机构信息管理、预约订单管理、床位更新和服务套餐发布，用于展示平台双向服务体系。</p>
+        </article>
+      </section>
+    </main>
+
+    <nav class="tabbar" id="tabbar">
+      <button class="tab active" onclick="nav('home', this)">首页</button>
+      <button class="tab" onclick="nav('nearby', this)">附近</button>
+      <button class="tab" onclick="nav('messages', this)">消息</button>
+      <button class="tab" onclick="nav('mine', this)">我的</button>
+    </nav>
+  </section>
+
+  <!-- 弹窗区域 -->
+  <div class="modal" id="locationModal">
+    <div class="modal-card">
+      <h3>定位权限</h3>
+      <p>是否允许获取当前位置，用于推荐附近养老院？</p>
+      <button class="primary" onclick="closeModal('locationModal'); toast('定位已更新为北海市海城区')">允许定位</button>
+      <button class="ghost" onclick="closeModal('locationModal')">暂不允许</button>
+    </div>
+  </div>
+
+  <div class="modal" id="filterModal">
+    <div class="modal-card">
+      <h3>更多筛选</h3>
+      <button class="filter-row" onclick="modalFilter('医疗护理')">医疗护理</button>
+      <button class="filter-row" onclick="modalFilter('康复照护')">康复照护</button>
+      <button class="filter-row" onclick="modalFilter('价格适中')">价格适中</button>
+      <button class="filter-row" onclick="modalFilter('社区养老')">社区养老</button>
+      <button class="ghost" onclick="closeModal('filterModal')">取消</button>
+    </div>
+  </div>
+
+  <div class="modal" id="sosModal">
+    <div class="modal-card">
+      <h3>紧急求助确认</h3>
+      <p>已模拟触发紧急联系流程，可联系家属、社区服务点或附近养老机构。</p>
+      <button class="primary" onclick="closeModal('sosModal'); toast('求助信息已发送')">确认发送</button>
+      <button class="ghost" onclick="closeModal('sosModal')">取消</button>
+    </div>
+  </div>
+
+  <div class="modal" id="historyModal">
+    <div class="modal-card">
+      <h3>浏览历史</h3>
+      <p>海城区安心养老中心、银湾长者照护院、社区嵌入式养老驿站、康乐颐养护理中心。</p>
+      <button class="primary" onclick="closeModal('historyModal')">关闭</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">提示</div>
+  <script src="script.js"></script>
+</body>
+</html>
